@@ -30,6 +30,9 @@ class AnswerButton(tk.Button):
             self.selected = True
 
 
+
+
+
 class GameMaster:
     def __init__(self,master_app:tk.Tk):
         self.master_app:MainApp = master_app
@@ -65,6 +68,13 @@ class GameMaster:
         self.nextQuestion()
 
 
+
+    def toChoice(self):
+        if self.q_counter+1 >= self.q_max:
+            self.nextQuestion()
+        else:
+            self.master_app.changeFrame('choice')
+
     # QUESTION RELATED FUNCTIONS
     # Jumps to next question, called after correct answer
     def nextQuestion(self):
@@ -73,7 +83,7 @@ class GameMaster:
         #if this condition is true, it is the end of the game, jumps to reward screen
         if self.q_counter >= self.q_max:
             self.q_counter = -1
-            self.master_app.changeFrame('end')
+            self.master_app.changeFrame('win')
             return 1
 
         print(self.q_counter)
@@ -93,7 +103,7 @@ class GameMaster:
         self.q_counter = question_number
         if self.q_counter >= self.q_max:
             self.q_counter = -1
-            self.master_app.changeFrame('end')
+            self.master_app.changeFrame('win')
             return 1
 
         print(self.q_counter)
@@ -106,6 +116,7 @@ class GameMaster:
 
     def getQuestion(self):
         return self.q_counter +1, self.questions[self.q_counter]
+
 
 
     # HELP RELATED FUNCTIONS

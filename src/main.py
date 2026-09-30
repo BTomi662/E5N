@@ -30,10 +30,14 @@ class MainApp (tk.Tk):
         match frame:
             case 'start':
                 return StartPage(self)
-            case 'end':
-                return EndPage(self)
             case 'question':
-                return QuestionPage(self, self.GM)
+                return QuestionPage(self)
+            case 'choice':
+                return ChoicePage(self)
+            case 'win':
+                return WinPage(self)
+            case 'lose':
+                return LosePage(self)
 
 
 
@@ -57,24 +61,54 @@ class StartPage(tk.Frame):
 
 
 class QuestionPage(tk.Frame):
-    def __init__(self, master:tk.Tk, GM:GameMaster):
+    def __init__(self, master:tk.Tk):
         tk.Frame.__init__(self, master)
 
-        q_num, question = GM.getQuestion()
+        q_num, question = master.GM.getQuestion()
         l_q_number = tk.Label(self,text=f"{q_num}. Question")
         l_question = tk.Label(self,text=question)
 
         l_q_number.pack()
         l_question.pack()
 
-        b_start = tk.Button(self,text="NEXT",command=GM.nextQuestion)
+        b_start = tk.Button(self,text="NEXT",command=master.GM.toChoice)
         b_start.pack()
 
 
 
+class ChoicePage(tk.Frame):
+    def __init__(self, master:tk.Tk):
+        tk.Frame.__init__(self, master)
+
+        b_next = tk.Button(self,text="CONTINUE",command=master.GM.nextQuestion)
+        b_next.pack()
+        b_end = tk.Button(self,text="END GAME",command=lambda:master.GM.goToQuestion(999))
+        b_end.pack()
 
 
-class EndPage(tk.Frame):
+
+
+
+
+class WinPage(tk.Frame):
+    def __init__(self, master:tk.Tk):
+        tk.Frame.__init__(self, master)
+
+        l_q_number = tk.Label(self,text="Congratulations!")
+        l_question = tk.Label(self,text="You won!")
+
+        l_q_number.pack()
+        l_question.pack()
+
+        b_start = tk.Button(self,text="BACK TO HOME",command=self.endGame)
+        b_start.pack()
+
+    def endGame(self):
+        self.master.GM = GameMaster(self.master)
+
+
+
+class LosePage(tk.Frame):
     def __init__(self, master:tk.Tk):
         tk.Frame.__init__(self, master)
 
